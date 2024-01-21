@@ -4,17 +4,25 @@ from requests_toolbelt.multipart.encoder import MultipartEncoder
 
 url = 'http://127.0.0.1:8000'
 
-st.title('Text Generation Based On GPT')
+tab1, tab2, tab3 = st.tabs(["Information", "Generate","Model"])
 
-models = ['GPT 2', 'GPT Neo']
-selected_model = st.selectbox('Model:', models)
+with tab1:
+    st.title('Introduction')
 
-categories = ['Electronics', 'Home & Kitchen', 'Toys & Games']
-selected_category = st.selectbox('Category:', categories)
+with tab2:
+    st.title('Text Generation Based On GPT')
+    models = ['GPT 2', 'GPT Neo']
+    selected_model = st.selectbox('Model:', models)
 
-title_input = st.text_input('Title:')
+    categories = ['Electronics', 'Home & Kitchen', 'Toys & Games']
+    selected_category = st.selectbox('Category:', categories)
 
-feature_input = st.text_area('Feature:')
+    title_input = st.text_input('Title:')
+
+    feature_input = st.text_area('Feature:')
+
+with tab3:
+    st.title('Model Details')
 
 def generates(url, selected_category, title_input, feature_input):
     text = requests.post(url,
