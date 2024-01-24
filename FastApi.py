@@ -42,7 +42,7 @@ def get_data(category, description):
 
 app = FastAPI()
 
-@app.post('/testGPT2')
+@app.post('/test/gpt-2')
 def generate_gpt2(category: str, description: str, min_val: int, max_val: int, temps: float, top_ks: int):
     product = get_data(category, description)
     happy_gen = HappyGeneration(load_path="./GPT 2")
@@ -63,7 +63,7 @@ def generate_gpt2(category: str, description: str, min_val: int, max_val: int, t
     texts = [output, bleu_score, rouge_score]
     return texts
 
-@app.post('/testGPTNeo')
+@app.post('/test/gpt-neo')
 def generate_gptneo(category: str, description: str, min_val: int, max_val: int, temps: float, top_ks: int):
     product = get_data(category, description)
     happy_gen = HappyGeneration(load_path="./GPT Neo")
@@ -84,7 +84,7 @@ def generate_gptneo(category: str, description: str, min_val: int, max_val: int,
     texts = [output, bleu_scoree, rouge_score]
     return texts
 
-@app.post('/generateText')
+@app.post('/generate')
 def generate_gpt2(category: str, title: str, feature: str):
     happy_gen = HappyGeneration(load_path="./GPT Neo")
     gen_args = settings()
@@ -110,6 +110,6 @@ def show_description():
 def show_history():
     return data_store
 
-@app.get('/allHistory')
+@app.delete('/history')
 def delete_all_history():
     data_store.clear()

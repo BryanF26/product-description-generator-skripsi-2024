@@ -30,9 +30,9 @@ def generates(url, selected_category, title_input, feature_input):
 def test_model_button():
     if st.button('Test Model'):
         if selected_model == "GPT 2":
-            endpoint = '/testGPT2'
+            endpoint = '/test/gpt-2'
         if selected_model == "GPT Neo":
-            endpoint = '/testGPTNeo'
+            endpoint = '/test/gpt-neo'
         score = test_model(url+endpoint, selected_category, selected_description, min_val, max_val, temps, top_ks)
         evaluation = score.json()
         st.write(f'Generated Description: {evaluation[0]}')
@@ -43,7 +43,7 @@ def generated_text_button():
     if st.button('Generate Text'):
         if title_input == "" or feature_input == "":
             return st.write(f'Please fill Title and Features')
-        generated_text = generates(url+'/generateText', selected_category, title_input, feature_input)
+        generated_text = generates(url+'/generate', selected_category, title_input, feature_input)
         st.write(f'Generated Description: {generated_text}')
 
 tab1, tab2, tab3, tab4 = st.tabs(["Home", "Test Model", "Generate","History"])
@@ -90,5 +90,5 @@ with tab4:
     df = pd.DataFrame(data,columns=['Category', 'Title', 'Feature', 'Description'])
     st.dataframe(df, use_container_width=True, hide_index=True)
     if st.button('Clear History'):
-        requests.get(url+'/allHistory').json()
+        requests.delete(url+'/history')
         st.rerun()
