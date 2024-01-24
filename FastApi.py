@@ -4,26 +4,12 @@ import nltk
 from rouge import Rouge
 from nltk.translate.bleu_score import sentence_bleu
 nltk.download('punkt')
+import json
+f = open('Data.json')
+data_product = json.load(f)
+f.close()
 
 data_store = []
-
-data_description = {
-    'Electronics':[
-        "",
-        "",
-        ""
-    ], 
-    'Home & Kitchen':[
-        "",
-        "",
-        ""
-    ],
-    'Toys & Games':[
-        "",
-        "",
-        ""
-    ]
-}
 
 def settings(min_val= 50, max_val=100, temp=0.7, top_ks=50):
     min_length =  min_val
@@ -41,66 +27,62 @@ def settings(min_val= 50, max_val=100, temp=0.7, top_ks=50):
 def calculate_rouge_l_f_scores(model_summaries, reference_summaries):
     rouge = Rouge()
     scores = rouge.get_scores(model_summaries, reference_summaries)
-    return scores['rouge-l']['f']
+    return scores[0]["rouge-l"]["f"]
 
-def calculate_bleu_scores(model_summaries, reference_summaries):
-    bleu_scores = []
-    for model, reference in zip(model_summaries, reference_summaries):
-        model_tokens = nltk.word_tokenize(model)
-        reference_tokens = [nltk.word_tokenize(reference)]
-        bleu_scores = sentence_bleu(reference_tokens, model_tokens)
-    
+def calculate_bleu_scores(models, references):
+    model_tokens = nltk.word_tokenize(models)
+    reference_tokens = [nltk.word_tokenize(references)]
+    bleu_scores = sentence_bleu(reference_tokens, model_tokens)
     return bleu_scores
+
+def get_data(category, description):
+    for i in data_product[category]:
+        if i['description'] == description:
+            return i
 
 app = FastAPI()
 
 @app.post('/testGPT2')
 def generate_gpt2(category: str, description: str, min_val: int, max_val: int, temps: float, top_ks: int):
-    if category == 'Electronics':
-        data_electronic
-    elif category == 'Home & Kitchen':
-        data_home_and_kitchen
-    elif category == 'Toys & Games':
-        data_toy_and_games
+    product = get_data(category, description)
     happy_gen = HappyGeneration(load_path="./GPT 2")
     gen_args = settings(min_val, max_val, temps, top_ks)
+    descs = product['description'].split(' ')
     text = f"""Categories: {category}
-    Title: {title}
-    Features: {feature}
-    Description: """
+    Title: {product['title']}
+    Features: {product['feature']}
+    Description: {descs[0]} {descs[1]}"""
     result = happy_gen.generate_text(text, args=gen_args)
     output = result.text
     try:
         output = output.split('Description:')[1]
     except:
         output = output
-    bleu_score = calculate_bleu_scores(output,description)
+    bleu_score = calculate_bleu_scores(output, description)
     rouge_score = calculate_rouge_l_f_scores(output, description)
-    return output, bleu_score, rouge_score
+    texts = [output, bleu_score, rouge_score]
+    return texts
 
 @app.post('/testGPTNeo')
 def generate_gptneo(category: str, description: str, min_val: int, max_val: int, temps: float, top_ks: int):
-    if category == 'Electronics':
-        data_electronic
-    elif category == 'Home & Kitchen':
-        data_home_and_kitchen
-    elif category == 'Toys & Games':
-        data_toy_and_games
+    product = get_data(category, description)
     happy_gen = HappyGeneration(load_path="./GPT Neo")
     gen_args = settings(min_val, max_val, temps, top_ks)
+    descs = product['description'].split(' ')
     text = f"""Categories: {category}
-    Title: {title}
-    Features: {feature}
-    Description: """
+    Title: {product['title']}
+    Features: {product['feature']}
+    Description: {descs[0]} {descs[1]}"""
     result = happy_gen.generate_text(text, args=gen_args)
     output = result.text
     try:
         output = output.split('Description:')[1]
     except:
         output = output
-    bleu_score = calculate_bleu_scores(output,description)
+    bleu_scoree = calculate_bleu_scores(output, description)
     rouge_score = calculate_rouge_l_f_scores(output, description)
-    return bleu_score, rouge_score
+    texts = [output, bleu_scoree, rouge_score]
+    return texts
 
 @app.post('/generateText')
 def generate_gpt2(category: str, title: str, feature: str):
@@ -119,6 +101,10 @@ def generate_gpt2(category: str, title: str, feature: str):
     data = [category, title, feature, output]
     data_store.append(data)
     return output
+
+@app.get('/description')
+def show_description():
+    return data_product
 
 @app.get('/history')
 def show_history():
