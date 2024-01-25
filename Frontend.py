@@ -38,13 +38,15 @@ def test_model_button():
         st.write(f'Generated Description: {evaluation[0]}')
         st.write(f'Generated Bleu Score: 0.48096110132008857')
         st.write(f'Generated Rouge-L Score: {evaluation[2]}')
+        st.success('You have success test model')
 
 def generated_text_button():
     if st.button('Generate Text'):
         if title_input == "" or feature_input == "":
-            return st.write(f'Please fill Title and Features')
+            return st.warning(f'Please fill Title and Features')
         generated_text = generates(url+'/generate', selected_category, title_input, feature_input)
         st.write(f'Generated Description: {generated_text}')
+        st.success('You have success generate product description')
 
 tab1, tab2, tab3, tab4 = st.tabs(["Home", "Test Model", "Generate","History"])
 
@@ -91,4 +93,4 @@ with tab4:
     st.dataframe(df, use_container_width=True, hide_index=True)
     if st.button('Clear History'):
         requests.delete(url+'/history')
-        st.rerun()
+        st.success('You have success delete history')

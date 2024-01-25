@@ -85,7 +85,7 @@ def generate_gptneo(category: str, description: str, min_val: int, max_val: int,
     return texts
 
 @app.post('/generate')
-def generate_gpt2(category: str, title: str, feature: str):
+def generate(category: str, title: str, feature: str):
     happy_gen = HappyGeneration(load_path="./GPT Neo")
     gen_args = settings()
     text = f"""Categories: {category}
