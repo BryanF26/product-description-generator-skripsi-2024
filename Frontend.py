@@ -36,7 +36,7 @@ def test_model_button():
         score = test_model(url+endpoint, selected_category, selected_description, min_val, max_val, temps, top_ks)
         evaluation = score.json()
         st.write(f'Generated Description: {evaluation[0]}')
-        st.write(f'Generated Bleu Score: 0.48096110132008857')
+        st.write(f'Generated Bleu Score: {evaluation[1]}')
         st.write(f'Generated Rouge-L Score: {evaluation[2]}')
         st.success('You have success test model')
 
