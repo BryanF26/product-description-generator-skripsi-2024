@@ -17,12 +17,14 @@ def test_model(url, selected_category, selected_description, min_val, max_val, t
     )
     return text
 
-def generates(url, selected_category, title_input, feature_input):
+def generates(url, selected_category, title_input, feature_input, min_output, max_output):
     text = requests.post(url,
                         params={
                             'category':selected_category,
                             'title': title_input,
                             'feature': feature_input,
+                            'min_output': min_output, 
+                            'max_output': max_output
                         }
     )
     return text.json()
@@ -44,7 +46,7 @@ def generated_text_button():
     if st.button('Generate Text'):
         if title_input == "" or feature_input == "":
             return st.warning(f'Please fill Title and Features')
-        generated_text = generates(url+'/generate', selected_category, title_input, feature_input)
+        generated_text = generates(url+'/generate', selected_category, title_input, feature_input, min_output, max_output)
         st.write(f'Generated Description: {generated_text}')
         st.success('You have success generate product description')
 
@@ -83,6 +85,8 @@ with tab3:
     selected_category = st.selectbox('Category:', categories)
     title_input = st.text_input('Title:')
     feature_input = st.text_area('Feature:')
+    min_output = st.slider('Min (Minimal Length Generate)', min_value=10, max_value=100, value=10, key="min_output")
+    max_output = st.slider('Max (Maximal Length Generate)', min_value=10, max_value=100, value=50, key="max_output")
     generated_text_button()
 
 with tab4:
