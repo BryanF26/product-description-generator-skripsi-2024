@@ -1,5 +1,4 @@
 # Product Description Generator
-
 Product Description Generator is a website application using pre-trained models and provide high-quality, varied, and interesting product description using Python, Streamlit, and FastAPI. 
 We use Amazon Review Data (2018) and applies **GPT-2**, an advanced language model created by OpenAI that is well-known for its capacity to generate coherent and contextually appropriate text in response to a given prompt. 
 In addition, we introduce **GPT-Neo**, an open-source alternative that matches the GPT-3 design. 
